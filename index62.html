@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chúc mừng sinh nhật Ba</title>
+  <style>
+    body {
+      margin: 0; padding: 0;
+      text-align: center;
+      background: url("https://drive.google.com/uc?export=view&id=1ei9yM1b6mELt44WF0akcyLuVVpZC2_uH") no-repeat center center/cover;
+      color: white;
+      font-family: "Comic Sans MS", cursive;
+      overflow: hidden;
+    }
+    /* Canvas luôn ở dưới cùng */
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* Nội dung ở trên */
+    .content {
+      position: relative;
+      z-index: 10;
+      padding-top: 50px;
+    }
+    h1 {
+      font-size: 60px; margin-top: 20px;
+      animation: blinkColors 2s infinite;
+    }
+    @keyframes blinkColors {
+      0% { color: red; }
+      25% { color: yellow; }
+      50% { color: lime; }
+      75% { color: cyan; }
+      100% { color: magenta; }
+    }
+    p { font-size: 22px; margin: 10px auto; width: 80%; }
+    h2 {
+      font-size: 40px; color: red;
+      animation: heartbeat 1s infinite;
+    }
+    @keyframes heartbeat {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    img {
+      width: 250px; margin-top: 20px;
+      border-radius: 20px; box-shadow: 0 0 20px #fff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Nhạc nền -->
+  <audio autoplay loop muted id="birthdaySong">
+    <source src="https://archive.org/download/HappyBirthdayToYouTraditional_201601/HappyBirthdayToYouTraditional_201601.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    document.body.addEventListener("click", () => {
+      const song = document.getElementById("birthdaySong");
+      song.muted = false;
+      song.play();
+    }, { once: true });
+  </script>
+
+  <div class="content">
+    <h1>🎂 Chúc mừng sinh nhật Ba 🎂</h1>
+    <p>
+      Ba ơi, con chúc ba luôn khỏe mạnh và vui vẻ mỗi ngày.<br>
+      Con mong ba gặp nhiều may mắn và bình an bên gia đình.<br>
+      Chúc ba thật hạnh phúc và tràn đầy niềm vui!
+    </p>
+    <h2>❤️ Con yêu ba nhiều lắm! ❤️</h2>
+    <!-- Ảnh từ Google Drive được chèn đúng vị trí -->
+    <img src="h1.jpg" alt="Ảnh Ba">
+  </div>
+
+  <canvas id="fireworks"></canvas>
+  <script>
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    class Firework {
+      constructor(x, y, color) {
+        this.x = x; this.y = y; this.color = color;
+        this.radius = Math.random() * 2 + 1;
+        this.angle = Math.random() * 2 * Math.PI;
+        this.speed = Math.random() * 5 + 2;
+        this.life = 100;
+      }
+      update() {
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+        this.life--;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
+    let fireworks = [];
+    function animate() {
+      ctx.fillStyle = "rgba(0,0,0,0.2)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      fireworks = fireworks.filter(f => f.life > 0);
+      fireworks.forEach(f => { f.update(); f.draw(); });
+      requestAnimationFrame(animate);
+    }
+    animate();
+    setInterval(() => {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height / 2;
+      const colors = ["red","yellow","lime","cyan","magenta","white","orange"];
+      for (let i = 0; i < 50; i++) {
+        fireworks.push(new Firework(x, y, colors[Math.floor(Math.random()*colors.length)]));
+      }
+    }, 1500);
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
